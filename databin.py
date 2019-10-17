@@ -11,7 +11,7 @@ for file in files:
     if not file.endswith(".csv"):
         continue
 
-    print(file)
+    # print(file)
     # if count > 100:
     #     break
 
@@ -32,6 +32,11 @@ for file in files:
                 continue
 
             current_price = float(line[1])
+
+            if current_price < 0 or previous_price < 0:
+                print(f'file: {file} current_price: {current_price} previous_price: {previous_price}')
+                quit()
+
             # print(f'{current_price}')
             # print(f'{previous_price}')
             price_change = (current_price - previous_price)/previous_price
@@ -40,14 +45,14 @@ for file in files:
             percent_change_count[price_change] = percent_change_count.get(price_change, 0) + 1
             previous_price = current_price
 
-
-# sorted_percents = sorted(percent_change_count)
-# print(percent_change_count)
-for percent in sorted(percent_change_count.keys()):
-    print(f'percent: {percent} count: {percent_change_count[percent]}')
-
-
 # save the bins
-
+with open('out/percent_change_bins.csv', mode='w') as csv_file:
+    
+    fieldnames = ['percent_change', 'count']
+    writer = csv.writer(csv_file)
+    for percent in sorted(percent_change_count.keys()):
+        #print(f'percent: {percent} count: {percent_change_count[percent]}')
+        
+        writer.writerow([percent, percent_change_count[percent]])
 
      
